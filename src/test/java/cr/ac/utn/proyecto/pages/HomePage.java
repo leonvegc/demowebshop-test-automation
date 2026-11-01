@@ -1,6 +1,7 @@
   package cr.ac.utn.proyecto.pages;
 import java.util.List;
  
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -89,6 +90,16 @@ public class HomePage {
         cajaBusqueda.sendKeys(texto);
         botonBuscar.click();
         return new SearchPage(driver);
+    }
+
+    // Si se busca sin escribir nada, el sitio muestra una alerta.
+    // Este metodo devuelve el texto de la alerta y la cierra.
+    public String buscarSinTexto() {
+        botonBuscar.click();
+        Alert alerta = driver.switchTo().alert();
+        String mensaje = alerta.getText();
+        alerta.accept();
+        return mensaje;
     }
 
 }
