@@ -69,4 +69,14 @@ public class BusquedaTest extends BaseTest {
             assertTrue(titulo.toLowerCase().contains("pho"));
         }
     }
+
+    @Test
+    @DisplayName("CP-024 Búsqueda con el campo vacío")
+    public void busquedaConCampoVacio() {
+        String alerta = new HomePage(driver)
+                .abrir()
+                .buscarSinTexto();
+
+        assertEquals("Please enter some search keyword", alerta);
+    }
 }
