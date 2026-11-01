@@ -33,6 +33,13 @@ public class HomePage {
     @FindBy(className = "ico-login")
     private List<WebElement> listaLogin;
  
+    // Buscador del encabezado
+    @FindBy(id = "small-searchterms")
+    private WebElement cajaBusqueda;
+
+    @FindBy(css = ".search-box-button")
+    private WebElement botonBuscar;
+
     public HomePage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
@@ -75,6 +82,13 @@ public class HomePage {
     
     public boolean esVisitante() {
         return !listaLogin.isEmpty();
+    }
+
+    public SearchPage buscar(String texto) {
+        cajaBusqueda.clear();
+        cajaBusqueda.sendKeys(texto);
+        botonBuscar.click();
+        return new SearchPage(driver);
     }
 
 }
