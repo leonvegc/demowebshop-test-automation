@@ -44,4 +44,29 @@ public class BusquedaTest extends BaseTest {
         assertEquals(SIN_RESULTADOS, resultados.obtenerMensajeSinResultados());
         assertTrue(resultados.obtenerTitulos().isEmpty());
     }
+
+    @Test
+    @DisplayName("CP-022 Búsqueda con 2 caracteres")
+    public void busquedaConDosCaracteres() {
+        SearchPage resultados = new HomePage(driver)
+                .abrir()
+                .buscar("ab");
+
+        assertEquals("Search term minimum length is 3 characters", resultados.obtenerMensajeAdvertencia());
+    }
+
+    @Test
+    @DisplayName("CP-023 Búsqueda con 3 caracteres")
+    public void busquedaConTresCaracteres() {
+        SearchPage resultados = new HomePage(driver)
+                .abrir()
+                .buscar("pho");
+
+        // Con 3 caracteres ya se acepta la busqueda y salen productos
+        List<String> titulos = resultados.obtenerTitulos();
+        assertFalse(titulos.isEmpty());
+        for (String titulo : titulos) {
+            assertTrue(titulo.toLowerCase().contains("pho"));
+        }
+    }
 }
