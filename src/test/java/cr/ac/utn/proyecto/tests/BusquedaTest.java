@@ -79,4 +79,52 @@ public class BusquedaTest extends BaseTest {
 
         assertEquals("Please enter some search keyword", alerta);
     }
+
+    @Test
+    @DisplayName("CP-026 Búsqueda avanzada por rango de precio")
+    public void busquedaAvanzadaPorPrecio() {
+        SearchPage resultados = new SearchPage(driver)
+                .abrir()
+                .buscarAvanzado("computer", "All", false, "1000", "1500");
+
+        List<Double> precios = resultados.obtenerPrecios();
+        assertFalse(precios.isEmpty());
+        for (double precio : precios) {
+            assertTrue(precio >= 1000 && precio <= 1500);
+        }
+    }
+
+    @Test
+    @DisplayName("CP-027 Búsqueda avanzada con rango de precio invertido")
+    public void busquedaAvanzadaConRangoInvertido() {
+        // "Desde" es mayor que "Hasta"
+        SearchPage resultados = new SearchPage(driver)
+                .abrir()
+                .buscarAvanzado("computer", "All", false, "1500", "1000");
+
+        assertEquals(SIN_RESULTADOS, resultados.obtenerMensajeSinResultados());
+        assertTrue(resultados.obtenerTitulos().isEmpty());
+    }
+
+    @Test
+    @DisplayName("CP-028 Búsqueda avanzada por categoría con subcategorías")
+    public void busquedaAvanzadaConSubcategorias() {
+        SearchPage resultados = new SearchPage(driver)
+                .abrir()
+                .buscarAvanzado("computer", "Computers", true, "", "");
+
+        assertFalse(resultados.obtenerTitulos().isEmpty());
+    }
+
+    @Test
+    @DisplayName("CP-029 Búsqueda avanzada por categoría sin subcategorías")
+    public void busquedaAvanzadaSinSubcategorias() {
+        // Los productos estan dentro de Desktops, no directo en Computers
+        SearchPage resultados = new SearchPage(driver)
+                .abrir()
+                .buscarAvanzado("computer", "Computers", false, "", "");
+
+        assertEquals(SIN_RESULTADOS, resultados.obtenerMensajeSinResultados());
+        assertTrue(resultados.obtenerTitulos().isEmpty());
+    }
 }
