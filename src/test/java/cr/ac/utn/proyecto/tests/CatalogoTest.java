@@ -63,6 +63,41 @@ public class CatalogoTest extends BaseTest {
     }
 
     @Test
+    @DisplayName("CP-033 Mostrar 4 productos por página")
+    public void mostrarCuatroPorPagina() {
+        CategoryPage libros = new HomePage(driver)
+                .abrir()
+                .irACategoria("Books")
+                .mostrarPorPagina("4");
+
+        List<String> titulos = libros.obtenerTitulos();
+        assertFalse(titulos.isEmpty());
+        assertTrue(titulos.size() <= 4);
+
+        // Books tiene mas de 4 productos, entonces tiene que salir el paginador
+        assertTrue(libros.hayPaginaSiguiente());
+    }
+
+    @Test
+    @DisplayName("CP-034 Ir a la página siguiente del listado")
+    public void irAPaginaSiguiente() {
+        CategoryPage pagina1 = new HomePage(driver)
+                .abrir()
+                .irACategoria("Books")
+                .mostrarPorPagina("4");
+        List<String> titulosPagina1 = pagina1.obtenerTitulos();
+
+        CategoryPage pagina2 = pagina1.irAPaginaSiguiente();
+        List<String> titulosPagina2 = pagina2.obtenerTitulos();
+
+        // La segunda pagina tiene productos y ninguno se repite de la primera
+        assertFalse(titulosPagina2.isEmpty());
+        for (String titulo : titulosPagina2) {
+            assertFalse(titulosPagina1.contains(titulo));
+        }
+    }
+
+    @Test
     @DisplayName("CP-035 Cambiar la vista a lista")
     public void cambiarVistaALista() {
         CategoryPage libros = new HomePage(driver)
