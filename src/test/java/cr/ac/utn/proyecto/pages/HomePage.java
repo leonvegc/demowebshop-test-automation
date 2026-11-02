@@ -2,6 +2,7 @@
 import java.util.List;
  
 import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -40,6 +41,10 @@ public class HomePage {
 
     @FindBy(css = ".search-box-button")
     private WebElement botonBuscar;
+
+    // Se usa el menu de categorias de la izquierda porque el de arriba se ve en MAYUSCULAS
+    @FindBy(css = ".block-category-navigation")
+    private WebElement menuCategorias;
 
     public HomePage(WebDriver driver) {
         this.driver = driver;
@@ -100,6 +105,13 @@ public class HomePage {
         String mensaje = alerta.getText();
         alerta.accept();
         return mensaje;
+    }
+
+    // Se usa By porque el nombre de la categoria cambia en cada prueba
+    // y @FindBy no acepta parametros.
+    public CategoryPage irACategoria(String nombre) {
+        menuCategorias.findElement(By.linkText(nombre)).click();
+        return new CategoryPage(driver);
     }
 
 }
