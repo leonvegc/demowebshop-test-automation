@@ -5,11 +5,13 @@ import java.util.List;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.CacheLookup;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
 
 import cr.ac.utn.proyecto.base.BaseTest;
+import cr.ac.utn.proyecto.base.Esperas;
 
 public class SearchPage {
     private WebDriver driver;
@@ -33,7 +35,9 @@ public class SearchPage {
     @FindBy(id = "Pt")
     private WebElement campoPrecioHasta;
 
+    // @CacheLookup: se guarda el boton para saber cuando la pagina se recargo (ver Esperas)
     @FindBy(css = ".search-button")
+    @CacheLookup
     private WebElement botonBuscar;
 
     // Resultados: son listas porque puede haber varios (o ninguno)
@@ -64,7 +68,7 @@ public class SearchPage {
     public SearchPage buscar(String texto) {
         campoTexto.clear();
         campoTexto.sendKeys(texto);
-        botonBuscar.click();
+        Esperas.clicYEsperarRecarga(driver, botonBuscar);
         return new SearchPage(driver);
     }
 
@@ -90,7 +94,7 @@ public class SearchPage {
         campoPrecioHasta.clear();
         campoPrecioHasta.sendKeys(precioHasta);
 
-        botonBuscar.click();
+        Esperas.clicYEsperarRecarga(driver, botonBuscar);
         return new SearchPage(driver);
     }
 

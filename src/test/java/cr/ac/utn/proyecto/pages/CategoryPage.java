@@ -13,6 +13,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import cr.ac.utn.proyecto.base.Esperas;
+
 public class CategoryPage {
     private WebDriver driver;
 
@@ -63,7 +65,8 @@ public class CategoryPage {
     // Se usa By porque el nombre de la subcategoria cambia en cada prueba
     // y @FindBy no acepta parametros.
     public CategoryPage irASubcategoria(String nombre) {
-        subcategorias.findElement(By.linkText(nombre)).click();
+        WebElement enlace = subcategorias.findElement(By.linkText(nombre));
+        Esperas.clicYEsperarRecarga(driver, enlace);
         return new CategoryPage(driver);
     }
 
@@ -90,7 +93,7 @@ public class CategoryPage {
     }
 
     public CategoryPage irAPaginaSiguiente() {
-        enlaceSiguiente.get(0).click();
+        Esperas.clicYEsperarRecarga(driver, enlaceSiguiente.get(0));
         return new CategoryPage(driver);
     }
 
