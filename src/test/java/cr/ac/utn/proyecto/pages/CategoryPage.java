@@ -47,6 +47,10 @@ public class CategoryPage {
     @FindBy(css = ".product-list")
     private List<WebElement> vistaLista;
 
+    // Enlace "Next" del paginador (no existe si todo cabe en una pagina)
+    @FindBy(css = ".pager .next-page a")
+    private List<WebElement> enlaceSiguiente;
+
     public CategoryPage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
@@ -79,6 +83,15 @@ public class CategoryPage {
     public CategoryPage cambiarVista(String vista) {
         elegirOpcion(listaVista, vista);
         return this;
+    }
+
+    public boolean hayPaginaSiguiente() {
+        return !enlaceSiguiente.isEmpty();
+    }
+
+    public CategoryPage irAPaginaSiguiente() {
+        enlaceSiguiente.get(0).click();
+        return new CategoryPage(driver);
     }
 
     public boolean estaEnVistaLista() {
