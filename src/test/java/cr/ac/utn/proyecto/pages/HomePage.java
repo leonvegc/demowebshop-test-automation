@@ -1,12 +1,16 @@
   package cr.ac.utn.proyecto.pages;
 import java.util.List;
  
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.CacheLookup;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
  
 import cr.ac.utn.proyecto.base.BaseTest;
+import cr.ac.utn.proyecto.base.Esperas;
 
 public class HomePage {
     private WebDriver driver;
@@ -33,6 +37,19 @@ public class HomePage {
     @FindBy(className = "ico-login")
     private List<WebElement> listaLogin;
  
+    // Buscador del encabezado
+    @FindBy(id = "small-searchterms")
+    private WebElement cajaBusqueda;
+
+    // @CacheLookup: se guarda el boton para saber cuando la pagina se recargo (ver Esperas)
+    @FindBy(css = ".search-box-button")
+    @CacheLookup
+    private WebElement botonBuscar;
+
+    // Se usa el menu de categorias de la izquierda porque el de arriba se ve en MAYUSCULAS
+    @FindBy(css = ".block-category-navigation")
+    private WebElement menuCategorias;
+
     public HomePage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
@@ -75,6 +92,31 @@ public class HomePage {
     
     public boolean esVisitante() {
         return !listaLogin.isEmpty();
+    }
+
+    public SearchPage buscar(String texto) {
+        cajaBusqueda.clear();
+        cajaBusqueda.sendKeys(texto);
+        Esperas.clicYEsperarRecarga(driver, botonBuscar);
+        return new SearchPage(driver);
+    }
+
+    // Si se busca sin escribir nada, el sitio muestra una alerta.
+    // Este metodo devuelve el texto de la alerta y la cierra.
+    public String buscarSinTexto() {
+        botonBuscar.click();
+        Alert alerta = driver.switchTo().alert();
+        String mensaje = alerta.getText();
+        alerta.accept();
+        return mensaje;
+    }
+
+    // Se usa By porque el nombre de la categoria cambia en cada prueba
+    // y @FindBy no acepta parametros.
+    public CategoryPage irACategoria(String nombre) {
+        WebElement enlace = menuCategorias.findElement(By.linkText(nombre));
+        Esperas.clicYEsperarRecarga(driver, enlace);
+        return new CategoryPage(driver);
     }
 
 }
