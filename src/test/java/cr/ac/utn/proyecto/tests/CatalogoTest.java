@@ -2,6 +2,7 @@ package cr.ac.utn.proyecto.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -59,5 +60,17 @@ public class CatalogoTest extends BaseTest {
         List<Double> ordenados = new ArrayList<>(precios);
         Collections.sort(ordenados);
         assertEquals(ordenados, precios);
+    }
+
+    @Test
+    @DisplayName("CP-035 Cambiar la vista a lista")
+    public void cambiarVistaALista() {
+        CategoryPage libros = new HomePage(driver)
+                .abrir()
+                .irACategoria("Books")
+                .cambiarVista("List");
+
+        assertTrue(libros.estaEnVistaLista());
+        assertFalse(libros.estaEnVistaCuadricula());
     }
 }
