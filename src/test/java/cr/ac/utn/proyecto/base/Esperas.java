@@ -25,7 +25,6 @@ public final class Esperas {
                 .until(ExpectedConditions.stalenessOf(elemento));
     }
 
-    
     /*
       Espera a que un elemento se vea en la pantalla.
       Sirve para los avisos que aparecen despues de un clic (por ejemplo la barra
@@ -34,5 +33,14 @@ public final class Esperas {
     public static void esperarVisible(WebDriver driver, WebElement elemento) {
         new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(ExpectedConditions.visibilityOf(elemento));
+    }
+
+    /*
+      Espera a que un elemento deje de verse.
+      La barra de avisos se esconde sola despues de unos segundos.
+     */
+    public static void esperarOculto(WebDriver driver, WebElement elemento) {
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.invisibilityOf(elemento));
     }
 }

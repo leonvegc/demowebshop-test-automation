@@ -58,6 +58,10 @@ public class HomePage {
     @FindBy(css = ".header-links .cart-qty")
     private WebElement contadorCarrito;
 
+    // Barra de avisos (sale arriba al agregar un producto)
+    @FindBy(id = "bar-notification")
+    private WebElement barraAviso;
+
     public HomePage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
@@ -127,7 +131,10 @@ public class HomePage {
         return new CategoryPage(driver);
     }
 
-        public CartPage irAlCarrito() {
+    public CartPage irAlCarrito() {
+        // Si acaba de salir la barra de avisos, tapa el enlace del carrito:
+        // esperamos a que se esconda antes de hacer clic
+        Esperas.esperarOculto(driver, barraAviso);
         Esperas.clicYEsperarRecarga(driver, enlaceCarrito);
         return new CartPage(driver);
     }
