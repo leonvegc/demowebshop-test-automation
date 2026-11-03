@@ -70,6 +70,15 @@ public class CategoryPage {
         return new CategoryPage(driver);
     }
 
+    // Se usa By porque el nombre del producto cambia en cada prueba
+    // y @FindBy no acepta parametros.
+    public ProductPage abrirProducto(String nombre) {
+        WebElement enlace = driver.findElement(By.linkText(nombre));
+        Esperas.clicYEsperarRecarga(driver, enlace);
+        return new ProductPage(driver);
+    }
+
+
     // Ejemplo de opcion: "Name: A to Z" o "Price: Low to High"
     public CategoryPage ordenarPor(String opcion) {
         elegirOpcion(listaOrden, opcion);
