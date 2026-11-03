@@ -36,6 +36,10 @@ public class CartPage {
     @FindBy(css = ".cart-total .product-price")
     private WebElement subtotalCarrito;
 
+    // Casilla "Remove" de la primera fila
+    @FindBy(css = ".cart-item-row input[name='removefromcart']")
+    private WebElement casillaQuitar;
+
     // @CacheLookup: se guarda el boton para saber cuando la pagina se recargo (ver Esperas)
     @FindBy(name = "updatecart")
     @CacheLookup
@@ -57,6 +61,13 @@ public class CartPage {
     public CartPage cambiarCantidad(String cantidad) {
         campoCantidad.clear();
         campoCantidad.sendKeys(cantidad);
+        Esperas.clicYEsperarRecarga(driver, botonActualizar);
+        return new CartPage(driver);
+    }
+
+    // Marca la casilla Remove y actualiza el carrito
+    public CartPage quitarProducto() {
+        casillaQuitar.click();
         Esperas.clicYEsperarRecarga(driver, botonActualizar);
         return new CartPage(driver);
     }
