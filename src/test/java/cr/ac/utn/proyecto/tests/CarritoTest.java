@@ -14,7 +14,6 @@ import cr.ac.utn.proyecto.pages.ProductPage;
 public class CarritoTest extends BaseTest {
 
     @Test
-
     @DisplayName("CP-040 Agregar un producto desde su página")
     public void agregarDesdeLaPaginaDelProducto() {
         ProductPage producto = new HomePage(driver)
@@ -30,7 +29,20 @@ public class CarritoTest extends BaseTest {
         assertEquals(1, inicio.obtenerCantidadCarrito());
         assertTrue(inicio.irAlCarrito().obtenerNombres().contains("Health Book"));
     }
-    
+
+    @Test
+    @DisplayName("CP-041 Agregar un producto desde el listado")
+    public void agregarDesdeElListado() {
+        new HomePage(driver)
+                .abrir()
+                .irACategoria("Books")
+                .agregarAlCarrito("Health Book");
+
+        HomePage inicio = new HomePage(driver);
+        assertEquals(1, inicio.obtenerCantidadCarrito());
+        assertTrue(inicio.irAlCarrito().obtenerNombres().contains("Health Book"));
+    }
+
     @Test
     @DisplayName("CP-044 Carrito vacío muestra un mensaje")
     public void carritoVacio() {
