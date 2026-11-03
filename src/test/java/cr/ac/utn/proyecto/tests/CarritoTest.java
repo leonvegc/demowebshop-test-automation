@@ -94,4 +94,33 @@ public class CarritoTest extends BaseTest {
         assertEquals("Your Shopping Cart is empty!", carrito.obtenerMensajeCarritoVacio());
         assertEquals(0, carrito.obtenerCantidadDeFilas());
     }
+
+    @Test
+    @DisplayName("CP-049 Cambiar la cantidad del carrito a cero")
+    public void cambiarCantidadACero() {
+        agregarLibroAlCarrito();
+
+        CartPage carrito = new HomePage(driver)
+                .irAlCarrito()
+                .cambiarCantidad("0");
+
+        // El sitio trata la cantidad 0 como quitar el producto
+        assertEquals("Your Shopping Cart is empty!", carrito.obtenerMensajeCarritoVacio());
+        assertEquals(0, new HomePage(driver).obtenerCantidadCarrito());
+    }
+
+    @Test
+    @DisplayName("CP-050 Cambiar la cantidad del carrito a un texto")
+    public void cambiarCantidadATexto() {
+        agregarLibroAlCarrito();
+
+        CartPage carrito = new HomePage(driver)
+                .irAlCarrito()
+                .cambiarCantidad("abc");
+
+        // El texto no se acepta: la cantidad se queda en 1 y el producto sigue en el carrito
+        assertEquals("1", carrito.obtenerCantidad());
+        assertEquals(1, carrito.obtenerCantidadDeFilas());
+        assertEquals(1, new HomePage(driver).obtenerCantidadCarrito());
+    }
 }
