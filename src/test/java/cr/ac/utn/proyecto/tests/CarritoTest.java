@@ -72,6 +72,19 @@ public class CarritoTest extends BaseTest {
     }
 
     @Test
+    @DisplayName("CP-043 Quitar un producto del carrito")
+    public void quitarProducto() {
+        agregarLibroAlCarrito();
+
+        CartPage carrito = new HomePage(driver)
+                .irAlCarrito()
+                .quitarProducto();
+
+        assertEquals("Your Shopping Cart is empty!", carrito.obtenerMensajeCarritoVacio());
+        assertEquals(0, new HomePage(driver).obtenerCantidadCarrito());
+    }
+
+    @Test
     @DisplayName("CP-044 Carrito vacío muestra un mensaje")
     public void carritoVacio() {
         CartPage carrito = new HomePage(driver)
