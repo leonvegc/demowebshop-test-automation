@@ -31,9 +31,10 @@ public class CartPage {
     @FindBy(css = ".cart-item-row .product-subtotal")
     private WebElement subtotalProducto;
 
-    // Total de toda la compra
-    @FindBy(css = ".cart-total .order-total")
-    private WebElement total;
+    // Sub-Total de toda la compra. El "Total" no sirve: en los productos con envio
+    // dice "Calculated during checkout" y el numero solo sale al final de la compra.
+    @FindBy(css = ".cart-total .product-price")
+    private WebElement subtotalCarrito;
 
     // @CacheLookup: se guarda el boton para saber cuando la pagina se recargo (ver Esperas)
     @FindBy(name = "updatecart")
@@ -80,8 +81,8 @@ public class CartPage {
         return Double.parseDouble(subtotalProducto.getText());
     }
 
-    public double obtenerTotal() {
-        return Double.parseDouble(total.getText());
+    public double obtenerSubtotalCarrito() {
+        return Double.parseDouble(subtotalCarrito.getText());
     }
 
     public String obtenerMensajeCarritoVacio() {
