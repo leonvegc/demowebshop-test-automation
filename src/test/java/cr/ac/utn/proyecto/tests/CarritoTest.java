@@ -13,6 +13,17 @@ import cr.ac.utn.proyecto.pages.ProductPage;
 
 public class CarritoTest extends BaseTest {
 
+    /*
+      Agrega el libro Health Book al carrito desde el listado.
+      Asi cada prueba empieza con un producto en el carrito y no depende de otras pruebas.
+     */
+    private void agregarLibroAlCarrito() {
+        new HomePage(driver)
+                .abrir()
+                .irACategoria("Books")
+                .agregarAlCarrito("Health Book");
+    }
+
     @Test
     @DisplayName("CP-040 Agregar un producto desde su página")
     public void agregarDesdeLaPaginaDelProducto() {
@@ -41,6 +52,23 @@ public class CarritoTest extends BaseTest {
         HomePage inicio = new HomePage(driver);
         assertEquals(1, inicio.obtenerCantidadCarrito());
         assertTrue(inicio.irAlCarrito().obtenerNombres().contains("Health Book"));
+    }
+
+    @Test
+    @DisplayName("CP-042 Cambiar la cantidad y recalcular el total")
+    public void cambiarCantidadYRecalcular() {
+        agregarLibroAlCarrito();
+
+        // Se abre el carrito y se cambia la cantidad de 1 a 3
+        CartPage carrito = new HomePage(driver)
+                .irAlCarrito()
+                .cambiarCantidad("3");
+
+        // El subtotal tiene que ser 3 veces el precio de un producto
+        double esperado = carrito.obtenerPrecioUnitario() * 3;
+        assertEquals(esperado, carrito.obtenerSubtotalProducto(), 0.01);
+        assertEquals(esperado, carrito.obtenerSubtotalCarrito(), 0.01);
+        assertEquals(3, new HomePage(driver).obtenerCantidadCarrito());
     }
 
     @Test
