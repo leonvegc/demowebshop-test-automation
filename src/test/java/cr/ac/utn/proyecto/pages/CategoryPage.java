@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -34,6 +35,14 @@ public class CategoryPage {
 
     @FindBy(id = "products-viewmode")
     private WebElement listaVista;
+
+    // Cada caja de producto del listado (con su titulo y su boton Add to cart)
+    @FindBy(css = ".product-item")
+    private List<WebElement> productos;
+
+    // Barra de avisos que sale arriba al agregar un producto
+    @FindBy(id = "bar-notification")
+    private WebElement barraAviso;
 
     // Productos del listado
     @FindBy(css = ".product-item .product-title a")
@@ -78,6 +87,22 @@ public class CategoryPage {
         return new ProductPage(driver);
     }
 
+    /*
+      Agrega al carrito un producto desde el listado, sin entrar a su pagina.
+      El boton Add to cart es igual en todos los productos, asi que se busca
+      dentro de la caja del producto cuyo titulo coincide con el nombre.
+     */
+    public CategoryPage agregarAlCarrito(String nombre) {
+        for (WebElement producto : productos) {
+            String titulo = producto.findElement(By.cssSelector(".product-title a")).getText();
+            if (titulo.equals(nombre)) {
+                producto.findElement(By.cssSelector(".product-box-add-to-cart-button")).click();
+                Esperas.esperarVisible(driver, barraAviso);
+                return this;
+            }
+        }
+        throw new NoSuchElementException("No hay un producto llamado " + nombre);
+    }
 
     // Ejemplo de opcion: "Name: A to Z" o "Price: Low to High"
     public CategoryPage ordenarPor(String opcion) {
