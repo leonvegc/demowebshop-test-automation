@@ -50,6 +50,18 @@ public class HomePage {
     @FindBy(css = ".block-category-navigation")
     private WebElement menuCategorias;
 
+    // Carrito del encabezado (el enlace tambien sale en el pie, por eso se limita a .header-links)
+    @FindBy(css = ".header-links .ico-cart")
+    @CacheLookup
+    private WebElement enlaceCarrito;
+
+    @FindBy(css = ".header-links .cart-qty")
+    private WebElement contadorCarrito;
+
+    // Barra de avisos (sale arriba al agregar un producto)
+    @FindBy(id = "bar-notification")
+    private WebElement barraAviso;
+
     public HomePage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
@@ -117,6 +129,20 @@ public class HomePage {
         WebElement enlace = menuCategorias.findElement(By.linkText(nombre));
         Esperas.clicYEsperarRecarga(driver, enlace);
         return new CategoryPage(driver);
+    }
+
+    public CartPage irAlCarrito() {
+        // Si acaba de salir la barra de avisos, tapa el enlace del carrito:
+        // esperamos a que se esconda antes de hacer clic
+        Esperas.esperarOculto(driver, barraAviso);
+        Esperas.clicYEsperarRecarga(driver, enlaceCarrito);
+        return new CartPage(driver);
+    }
+
+    // El contador se ve como "(2)": se quitan los parentesis para dejar solo el numero
+    public int obtenerCantidadCarrito() {
+        String texto = contadorCarrito.getText().replace("(", "").replace(")", "");
+        return Integer.parseInt(texto);
     }
 
 }
