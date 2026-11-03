@@ -84,6 +84,11 @@ public class CartPage {
         return nombres;
     }
 
+    // Lo que dice la caja de cantidad (el valor esta en el atributo "value", no es texto)
+    public String obtenerCantidad() {
+        return campoCantidad.getAttribute("value");
+    }
+
     public double obtenerPrecioUnitario() {
         return Double.parseDouble(precioUnitario.getText());
     }
