@@ -45,6 +45,13 @@ public class CartPage {
     @CacheLookup
     private WebElement botonActualizar;
 
+    // Para empezar la compra (los usa el checkout)
+    @FindBy(id = "termsofservice")
+    private WebElement casillaTerminos;
+
+    @FindBy(id = "checkout")
+    private WebElement botonCheckout;
+
     // Con el carrito vacio, aqui sale el mensaje
     @FindBy(css = ".order-summary-content")
     private WebElement contenidoCarrito;
@@ -70,6 +77,20 @@ public class CartPage {
         casillaQuitar.click();
         Esperas.clicYEsperarRecarga(driver, botonActualizar);
         return new CartPage(driver);
+    }
+
+    // Marca "I agree with the terms of service"
+    public CartPage aceptarTerminos() {
+        casillaTerminos.click();
+        return this;
+    }
+
+    /*
+      Hace clic en Checkout. Todavia no devuelve la pagina siguiente porque CheckoutPage
+      no existe; cuando se cree, este metodo debe devolverla.
+     */
+    public void irAlCheckout() {
+        botonCheckout.click();
     }
 
     public int obtenerCantidadDeFilas() {
