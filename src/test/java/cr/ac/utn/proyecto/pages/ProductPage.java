@@ -3,6 +3,7 @@ package cr.ac.utn.proyecto.pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.CacheLookup;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
@@ -20,6 +21,10 @@ public class ProductPage {
 
     @FindBy(css = ".add-to-cart-panel .add-to-cart-button")
     private WebElement botonAgregar;
+
+    @FindBy(css = ".add-to-compare-list-button")
+    @CacheLookup
+    private WebElement botonComparar;
 
     // Precio que se ve en la pagina del producto
     @FindBy(css = ".product-price span")
@@ -89,5 +94,10 @@ public class ProductPage {
 
     public String obtenerMensajeAviso() {
         return textoAviso.getText();
+    }
+
+    public ComparePage agregarAComparar() {
+        Esperas.clicYEsperarRecarga(driver, botonComparar);
+        return new ComparePage(driver);
     }
 }
