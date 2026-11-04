@@ -52,6 +52,10 @@ public class CartPage {
     @FindBy(id = "checkout")
     private WebElement botonCheckout;
 
+    // Aviso que aparece si se hace clic en Checkout sin aceptar los terminos
+    @FindBy(id = "terms-of-service-warning-box")
+    private WebElement avisoTerminos;
+
     // Con el carrito vacio, aqui sale el mensaje
     @FindBy(css = ".order-summary-content")
     private WebElement contenidoCarrito;
@@ -91,6 +95,17 @@ public class CartPage {
      */
     public void irAlCheckout() {
         botonCheckout.click();
+    }
+
+    // Si no se marcaron los terminos, se queda en el carrito y sale un cuadro de aviso
+    public CartPage intentarCheckoutSinTerminos() {
+        botonCheckout.click();
+        Esperas.esperarVisible(driver, avisoTerminos);
+        return this;
+    }
+
+    public String obtenerAvisoTerminos() {
+        return avisoTerminos.getText();
     }
 
     public int obtenerCantidadDeFilas() {
