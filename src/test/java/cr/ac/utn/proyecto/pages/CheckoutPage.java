@@ -27,6 +27,22 @@ public class CheckoutPage {
     @FindBy(id = "BillingNewAddress_PhoneNumber")
     private WebElement campoTelefono;
 
+    // Mensajes de error cuando faltan campos obligatorios en facturacion
+    @FindBy(css = "span[data-valmsg-for='BillingNewAddress.CountryId']")
+    private WebElement errorPais;
+
+    @FindBy(css = "span[data-valmsg-for='BillingNewAddress.City']")
+    private WebElement errorCiudad;
+
+    @FindBy(css = "span[data-valmsg-for='BillingNewAddress.Address1']")
+    private WebElement errorDireccion;
+
+    @FindBy(css = "span[data-valmsg-for='BillingNewAddress.ZipPostalCode']")
+    private WebElement errorCodigoPostal;
+
+    @FindBy(css = "span[data-valmsg-for='BillingNewAddress.PhoneNumber']")
+    private WebElement errorTelefono;
+
     // Botones Continue de cada paso del checkout
     @FindBy(css = "#billing-buttons-container .new-address-next-step-button")
     private WebElement botonContinuarFacturacion;
@@ -100,5 +116,33 @@ public class CheckoutPage {
         Esperas.esperarVisible(driver, botonConfirmarOrden);
         botonConfirmarOrden.click();
         return new OrderCompletedPage(driver);
+    }
+
+    // Intenta avanzar en facturacion sin llenar los campos obligatorios
+    public CheckoutPage intentarContinuarFacturacionVacia() {
+        Esperas.esperarVisible(driver, botonContinuarFacturacion);
+        botonContinuarFacturacion.click();
+        Esperas.esperarVisible(driver, errorPais);
+        return this;
+    }
+
+    public String obtenerErrorPais() {
+        return errorPais.getText();
+    }
+
+    public String obtenerErrorCiudad() {
+        return errorCiudad.getText();
+    }
+
+    public String obtenerErrorDireccion() {
+        return errorDireccion.getText();
+    }
+
+    public String obtenerErrorCodigoPostal() {
+        return errorCodigoPostal.getText();
+    }
+
+    public String obtenerErrorTelefono() {
+        return errorTelefono.getText();
     }
 }
