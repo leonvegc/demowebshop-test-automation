@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import cr.ac.utn.proyecto.base.BaseTest;
 import cr.ac.utn.proyecto.base.DatosPrueba;
 import cr.ac.utn.proyecto.pages.CartPage;
+import cr.ac.utn.proyecto.pages.CheckoutPage;
 import cr.ac.utn.proyecto.pages.HomePage;
 import cr.ac.utn.proyecto.pages.OrderCompletedPage;
 
@@ -60,5 +61,21 @@ public class CheckoutTest extends BaseTest {
 
         assertEquals("Your order has been successfully processed!", orden.obtenerMensajeConfirmacion());
         assertTrue(orden.obtenerNumeroOrden().contains("Order number:"));
+    }
+
+    @Test
+    @DisplayName("CP-065 Continuar en facturación con campos obligatorios vacíos")
+    public void continuarFacturacionConCamposVacios() {
+        CheckoutPage checkout = registrarYAgregarLibro()
+                .irAlCarrito()
+                .aceptarTerminos()
+                .irAlCheckout()
+                .intentarContinuarFacturacionVacia();
+
+        assertEquals("Country is required.", checkout.obtenerErrorPais());
+        assertEquals("City is required", checkout.obtenerErrorCiudad());
+        assertEquals("Street address is required", checkout.obtenerErrorDireccion());
+        assertEquals("Zip / postal code is required", checkout.obtenerErrorCodigoPostal());
+        assertEquals("Phone is required", checkout.obtenerErrorTelefono());
     }
 }
