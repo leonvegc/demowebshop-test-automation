@@ -1,6 +1,7 @@
 package cr.ac.utn.proyecto.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -33,5 +34,19 @@ public class ComparacionTest extends BaseTest {
         assertEquals(2, nombres.size());
         assertTrue(nombres.contains("Computing and Internet"));
         assertTrue(nombres.contains("Health Book"));
+    }
+
+    @Test
+    @DisplayName("CP-061 Quitar un producto de la comparación")
+    public void quitarProductoDeLaComparacion() {
+        agregarLibroAComparar("Computing and Internet");
+        ComparePage comparacion = agregarLibroAComparar("Health Book")
+                .quitarProducto();
+
+        // El ultimo agregado (Health Book) aparece primero en la tabla y es el que se quita
+        List<String> nombres = comparacion.obtenerNombres();
+        assertEquals(1, nombres.size());
+        assertFalse(nombres.contains("Health Book"));
+        assertTrue(nombres.contains("Computing and Internet"));
     }
 }
