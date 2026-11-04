@@ -49,4 +49,15 @@ public class ComparacionTest extends BaseTest {
         assertFalse(nombres.contains("Health Book"));
         assertTrue(nombres.contains("Computing and Internet"));
     }
+
+    @Test
+    @DisplayName("CP-062 Limpiar la lista de comparación")
+    public void limpiarListaDeComparacion() {
+        agregarLibroAComparar("Computing and Internet");
+        ComparePage comparacion = agregarLibroAComparar("Health Book")
+                .limpiarLista();
+
+        assertEquals("You have no items to compare.", comparacion.obtenerMensajeListaVacia());
+        assertEquals(0, comparacion.obtenerCantidadDeProductos());
+    }
 }
