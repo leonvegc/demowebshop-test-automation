@@ -78,4 +78,29 @@ public class CheckoutTest extends BaseTest {
         assertEquals("Zip / postal code is required", checkout.obtenerErrorCodigoPostal());
         assertEquals("Phone is required", checkout.obtenerErrorTelefono());
     }
+
+    @Test
+    @DisplayName("CP-066 Compra completa como invitado")
+    public void compraCompletaComoInvitado() {
+        new HomePage(driver)
+                .abrir()
+                .irACategoria("Books")
+                .agregarAlCarrito("Health Book");
+
+        OrderCompletedPage orden = new HomePage(driver)
+                .irAlCarrito()
+                .aceptarTerminos()
+                .irAlCheckout()
+                .continuarComoInvitado()
+                .completarDireccionInvitado("Test", "QA", DatosPrueba.correoUnico(),
+                        "Costa Rica", "Alajuela", "Calle Central", "20101", "88888888")
+                .continuarDireccionEnvio()
+                .continuarMetodoEnvio()
+                .continuarMetodoPago()
+                .continuarInformacionPago()
+                .confirmarOrden();
+
+        assertEquals("Your order has been successfully processed!", orden.obtenerMensajeConfirmacion());
+        assertTrue(orden.obtenerNumeroOrden().contains("Order number:"));
+    }
 }
