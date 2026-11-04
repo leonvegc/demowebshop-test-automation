@@ -18,13 +18,13 @@ public class CheckoutTest extends BaseTest {
     // Crea un usuario nuevo con correo unico y agrega Health Book al carrito
     private HomePage registrarYAgregarLibro() {
         String correo = DatosPrueba.correoUnico();
-        HomePage inicio = new HomePage(driver)
+        new HomePage(driver)
                 .abrir()
                 .irARegistro()
-                .registrar("Test", "QA", correo, "123abc", "123abc")
-                .continuar();
+                .registrar("Test", "QA", correo, "123abc", "123abc");
 
-        inicio.irACategoria("Books")
+        new HomePage(driver)
+                .irACategoria("Books")
                 .agregarAlCarrito("Health Book");
 
         return new HomePage(driver);
