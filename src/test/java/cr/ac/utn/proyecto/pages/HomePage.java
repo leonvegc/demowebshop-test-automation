@@ -62,6 +62,9 @@ public class HomePage {
     @FindBy(id = "bar-notification")
     private WebElement barraAviso;
 
+    @FindBy(css = "#bar-notification .close")
+    private WebElement cerrarBarraAviso;
+
     public HomePage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
@@ -133,7 +136,10 @@ public class HomePage {
 
     public CartPage irAlCarrito() {
         // Si acaba de salir la barra de avisos, tapa el enlace del carrito:
-        // esperamos a que se esconda antes de hacer clic
+        // la cerramos y esperamos a que se esconda antes de hacer clic
+        if (barraAviso.isDisplayed()) {
+            cerrarBarraAviso.click();
+        }
         Esperas.esperarOculto(driver, barraAviso);
         Esperas.clicYEsperarRecarga(driver, enlaceCarrito);
         return new CartPage(driver);

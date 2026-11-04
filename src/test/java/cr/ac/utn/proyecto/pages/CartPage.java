@@ -49,8 +49,14 @@ public class CartPage {
     @FindBy(id = "termsofservice")
     private WebElement casillaTerminos;
 
+    // @CacheLookup: se guarda el boton para saber cuando la pagina se recargo (ver Esperas)
     @FindBy(id = "checkout")
+    @CacheLookup
     private WebElement botonCheckout;
+
+    // Aviso que aparece si se hace clic en Checkout sin aceptar los terminos
+    @FindBy(id = "terms-of-service-warning-box")
+    private WebElement avisoTerminos;
 
     // Con el carrito vacio, aqui sale el mensaje
     @FindBy(css = ".order-summary-content")
@@ -85,12 +91,21 @@ public class CartPage {
         return this;
     }
 
-    /*
-      Hace clic en Checkout. Todavia no devuelve la pagina siguiente porque CheckoutPage
-      no existe; cuando se cree, este metodo debe devolverla.
-     */
-    public void irAlCheckout() {
+    // Avanza a la pagina de checkout (requiere haber aceptado los terminos)
+    public CheckoutPage irAlCheckout() {
+        Esperas.clicYEsperarRecarga(driver, botonCheckout);
+        return new CheckoutPage(driver);
+    }
+
+    // Si no se marcaron los terminos, se queda en el carrito y sale un cuadro de aviso
+    public CartPage intentarCheckoutSinTerminos() {
         botonCheckout.click();
+        Esperas.esperarVisible(driver, avisoTerminos);
+        return this;
+    }
+
+    public String obtenerAvisoTerminos() {
+        return avisoTerminos.getText();
     }
 
     public int obtenerCantidadDeFilas() {
