@@ -2,6 +2,7 @@ package cr.ac.utn.proyecto.pages;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.CacheLookup;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
@@ -11,7 +12,21 @@ import cr.ac.utn.proyecto.base.Esperas;
 public class CheckoutPage {
     private WebDriver driver;
 
+    // Boton "Checkout as Guest" (solo aparece cuando se entra sin haber iniciado sesion)
+    @FindBy(css = ".checkout-as-guest-button")
+    @CacheLookup
+    private WebElement botonInvitado;
+
     // Campos de la direccion de facturacion (Billing Address)
+    @FindBy(id = "BillingNewAddress_FirstName")
+    private WebElement campoNombre;
+
+    @FindBy(id = "BillingNewAddress_LastName")
+    private WebElement campoApellido;
+
+    @FindBy(id = "BillingNewAddress_Email")
+    private WebElement campoCorreo;
+
     @FindBy(id = "BillingNewAddress_CountryId")
     private WebElement listaPais;
 
@@ -65,6 +80,26 @@ public class CheckoutPage {
     public CheckoutPage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
+    }
+
+    // Cuando no hay sesion iniciada, permite continuar la compra como invitado
+    public CheckoutPage continuarComoInvitado() {
+        Esperas.clicYEsperarRecarga(driver, botonInvitado);
+        return new CheckoutPage(driver);
+    }
+
+    // Llena todos los datos de facturacion (incluyendo nombre, apellido y correo para un invitado)
+    public CheckoutPage completarDireccionInvitado(String nombre, String apellido, String correo,
+                                                   String pais, String ciudad, String direccion,
+                                                   String codigoPostal, String telefono) {
+        Esperas.esperarVisible(driver, campoNombre);
+        campoNombre.clear();
+        campoNombre.sendKeys(nombre);
+        campoApellido.clear();
+        campoApellido.sendKeys(apellido);
+        campoCorreo.clear();
+        campoCorreo.sendKeys(correo);
+        return completarDireccionFacturacion(pais, ciudad, direccion, codigoPostal, telefono);
     }
 
     /*
